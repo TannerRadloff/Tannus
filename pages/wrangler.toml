@@ -1,0 +1,24 @@
+name = "ai-agents-webapp-pages"
+type = "frontend"
+account_id = ""
+compatibility_date = "2023-12-01"
+
+[build]
+command = "cd frontend && npm run build"
+output_directory = "frontend/build"
+root_dir = "."
+
+[site]
+bucket = "frontend/build"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+[build.environment]
+NODE_VERSION = "18"

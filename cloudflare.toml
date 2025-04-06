@@ -1,0 +1,55 @@
+name = "ai-agents-webapp"
+type = "javascript"
+account_id = ""
+route = ""
+workers_dev = true
+compatibility_date = "2023-12-01"
+
+[build]
+command = "cd worker && npm install && npm run build:worker"
+watch_dir = "worker/src"
+
+[site]
+bucket = "./frontend/build"
+
+[env.production]
+name = "ai-agents-webapp-prod"
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+name = "ai-agents-webapp-staging"
+vars = { ENVIRONMENT = "staging" }
+
+[env.development]
+name = "ai-agents-webapp-dev"
+vars = { ENVIRONMENT = "development" }
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "ai_agents_db"
+database_id = ""
+migrations_dir = "worker/migrations"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "PLANS_STORAGE"
+id = ""
+
+[[kv_namespaces]]
+binding = "AGENT_STORAGE"
+id = ""
+
+# Durable Objects
+[durable_objects]
+bindings = [
+  { name = "AGENT_SESSIONS", class_name = "AgentSession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AgentSession"]
+
+# Scheduled tasks
+[triggers]
+crons = ["*/5 * * * *"]

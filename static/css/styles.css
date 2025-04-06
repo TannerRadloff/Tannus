@@ -1,0 +1,417 @@
+/* Base styles */
+:root {
+    --primary-color: #4a6bdf;
+    --primary-dark: #3a56b0;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --background-color: #f5f7fa;
+    --card-background: #ffffff;
+    --border-color: #e1e4e8;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Layout */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.app-header h1 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.app-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 992px) {
+    .app-main {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .task-submission-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Panels */
+.task-submission-panel,
+.active-tasks-panel,
+.completed-tasks-panel,
+.task-detail-panel {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.panel-content {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 107, 223, 0.25);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-close {
+    background-color: transparent;
+    color: var(--secondary-color);
+    padding: 5px;
+}
+
+.btn-close:hover {
+    color: var(--danger-color);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.btn-view {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+.btn-view:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Task lists */
+.tasks-list {
+    display: grid;
+    gap: 15px;
+}
+
+.task-item {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.task-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.task-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-item-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.task-item-status {
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-running {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.status-completed {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-error {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.task-item-progress {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 8px;
+    background-color: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.task-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-item-time {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Task detail panel */
+.task-detail-panel {
+    position: fixed;
+    top: 0;
+    right: -600px;
+    width: 100%;
+    max-width: 600px;
+    height: 100vh;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+
+.task-detail-panel.active {
+    right: 0;
+}
+
+.task-info {
+    margin-bottom: 30px;
+}
+
+.task-metadata {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.plan-section {
+    margin-bottom: 30px;
+}
+
+.plan-content {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.plan-content h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.plan-content h2 {
+    font-size: 20px;
+    margin: 20px 0 10px;
+}
+
+.plan-content ul {
+    padding-left: 20px;
+}
+
+.plan-content li {
+    margin-bottom: 5px;
+}
+
+/* Agent actions */
+.agent-actions {
+    margin-bottom: 30px;
+}
+
+.actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.agent-action {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.action-time {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.action-type {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 600;
+}
+
+.action-description {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 14px;
+}
+
+/* Agent output */
+.output-content {
+    padding: 15px;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+/* Empty states */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Checkbox styling for plan content */
+.plan-content input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .task-detail-panel {
+        max-width: 100%;
+    }
+}

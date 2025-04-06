@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents Webapp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>AI Agents Webapp</h1>
+            <p>Powerful AI agents that run indefinitely to complete complex tasks</p>
+        </header>
+
+        <main class="app-main">
+            <div class="task-submission-panel">
+                <h2>Submit a New Task</h2>
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-input">Task Description:</label>
+                        <textarea id="task-input" name="task" rows="4" placeholder="Describe your task in detail..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Agent
+                    </button>
+                </form>
+            </div>
+
+            <div class="active-tasks-panel">
+                <h2>Active Tasks</h2>
+                <div id="active-tasks-list" class="tasks-list">
+                    <!-- Active tasks will be populated here -->
+                    <div class="empty-state">
+                        <i class="fas fa-robot"></i>
+                        <p>No active tasks. Submit a task to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="completed-tasks-panel">
+                <h2>Completed Tasks</h2>
+                <div id="completed-tasks-list" class="tasks-list">
+                    <!-- Completed tasks will be populated here -->
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>No completed tasks yet.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="task-detail-panel" id="task-detail-panel">
+            <div class="panel-header">
+                <h2 id="task-detail-title">Task Details</h2>
+                <button class="btn btn-close" id="close-detail-panel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="task-info">
+                    <h3>Task Description</h3>
+                    <p id="task-description"></p>
+                    <div class="task-metadata">
+                        <span id="task-status" class="status-badge"></span>
+                        <span id="task-created-at"></span>
+                    </div>
+                </div>
+
+                <div class="plan-section">
+                    <h3>Plan</h3>
+                    <div class="plan-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="plan-progress-fill"></div>
+                        </div>
+                        <span id="plan-progress-text">0%</span>
+                    </div>
+                    <div id="plan-content" class="plan-content"></div>
+                </div>
+
+                <div class="agent-actions">
+                    <h3>Agent Actions</h3>
+                    <div id="agent-actions-list" class="actions-list">
+                        <!-- Agent actions will be populated here -->
+                    </div>
+                </div>
+
+                <div class="agent-output">
+                    <h3>Agent Output</h3>
+                    <div id="agent-output-content" class="output-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates for dynamic content -->
+    <template id="task-item-template">
+        <div class="task-item" data-session-id="">
+            <div class="task-item-header">
+                <h3 class="task-item-title"></h3>
+                <span class="task-item-status"></span>
+            </div>
+            <div class="task-item-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="progress-text">0%</span>
+            </div>
+            <div class="task-item-footer">
+                <span class="task-item-time"></span>
+                <button class="btn btn-sm btn-view">View Details</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="agent-action-template">
+        <div class="agent-action">
+            <div class="action-time"></div>
+            <div class="action-type"></div>
+            <div class="action-description"></div>
+        </div>
+    </template>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

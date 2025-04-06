@@ -1,0 +1,6 @@
+openai-agents
+flask
+python-dotenv
+pydantic
+griffe
+typing-extensions

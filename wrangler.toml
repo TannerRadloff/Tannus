@@ -1,0 +1,30 @@
+name = "ai-agents-webapp"
+main = "src/index.js"
+compatibility_date = "2023-12-01"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ai_agents_db"
+database_id = "placeholder-db-id"
+
+[[kv_namespaces]]
+binding = "STORAGE"
+id = "placeholder-kv-id"
+
+[durable_objects]
+bindings = [
+  { name = "AGENT_SESSIONS", class_name = "AgentSession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AgentSession"]
+
+[site]
+bucket = "./frontend/build"
+
+[triggers]
+crons = ["*/5 * * * *"]
