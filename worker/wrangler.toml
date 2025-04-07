@@ -14,11 +14,11 @@ database_id = "6a8a09a7-3413-4b94-9e5c-b763cea716ad"
 
 [[kv_namespaces]]
 binding = "PLANS_STORAGE"
-id = "c2102778443846c99afdb7a27b0c0126"
+id = "null"
 
 [[kv_namespaces]]
 binding = "AGENT_STORAGE"
-id = "a1a9a350fe6e472d9ad4b823364453e1"
+id = "null"
 
 [triggers]
 crons = ["*/5 * * * *"]

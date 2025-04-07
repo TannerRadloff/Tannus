@@ -1,30 +1,40 @@
-name = "ai-agents-webapp"
-main = "src/index.js"
-compatibility_date = "2023-12-01"
+name = "airountable-api"
+main = "worker_es_module.js"
+compatibility_date = "2023-05-18"
 
-[vars]
-ENVIRONMENT = "production"
+# Enable logs for better observability
+[observability.logs]
+enabled = true
 
+# KV Namespace Bindings with correct IDs
+[[kv_namespaces]]
+binding = "PLANS_STORAGE"
+id = "c2102778443846c99afdb7a27b0c0126"
+
+[[kv_namespaces]]
+binding = "AGENT_STORAGE"
+id = "a1a9a350fe6e472d9ad4b823364453e1"
+
+# D1 Database Binding
 [[d1_databases]]
 binding = "DB"
 database_name = "ai_agents_db"
-database_id = "placeholder-db-id"
+database_id = "6a8a09a7-3413-4b94-9e5c-b763cea716ad"
 
-[[kv_namespaces]]
-binding = "STORAGE"
-id = "placeholder-kv-id"
+# Environment Variables
+[vars]
+ENVIRONMENT = "production"
+API_PATH = "api"
+FRONTEND_DOMAIN = "airountable.com"
 
-[durable_objects]
-bindings = [
-  { name = "AGENT_SESSIONS", class_name = "AgentSession" }
-]
-
-[[migrations]]
-tag = "v1"
-new_classes = ["AgentSession"]
-
-[site]
-bucket = "./frontend/build"
-
+# Routes Configuration - Ensure only API paths are handled by the worker
 [triggers]
+routes = [
+  { pattern = "airountable.com/api*", zone_name = "airountable.com" },
+  { pattern = "www.airountable.com/api*", zone_name = "airountable.com" }
+]
 crons = ["*/5 * * * *"]
+
+# Ensure we're not in preview mode
+[env.production]
+workers_dev = false
