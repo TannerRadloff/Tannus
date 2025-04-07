@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Paper, Typography, useTheme, useMediaQuery, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Paper, Typography, useTheme, useMediaQuery, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { ResponsiveContainer, ComposedChart, Line, Bar, Area, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 interface AgentPerformanceChartProps {
@@ -106,8 +106,8 @@ const AgentPerformanceChart: React.FC<AgentPerformanceChartProps> = ({
   }, [sessionId, selectedTimeRange]);
   
   // Handle time range change
-  const handleTimeRangeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedTimeRange(event.target.value as string);
+  const handleTimeRangeChange = (event: SelectChangeEvent<string>) => {
+    setSelectedTimeRange(event.target.value);
   };
   
   // Format X-axis tick based on time range
