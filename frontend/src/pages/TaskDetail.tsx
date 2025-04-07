@@ -4,7 +4,6 @@ import {
   Typography, 
   Box, 
   Paper, 
-  Grid as MuiGrid,
   Card,
   CardContent,
   LinearProgress,
@@ -28,9 +27,7 @@ import TaskProgressBar from '../components/TaskProgressBar';
 import { formatDate } from '../utils/dateUtils';
 import PlanStepsList from '../components/PlanStepsList';
 import AgentActionsList from '../components/AgentActionsList';
-
-// Create a Grid component that accepts the 'item' prop
-const Grid = (props: any) => <MuiGrid {...props} />;
+import Grid from '../components/Grid';
 
 const TaskDetail: React.FC = () => {
   const { taskId } = useParams<{ taskId: string }>();

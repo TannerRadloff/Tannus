@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Paper, Typography, useTheme, useMediaQuery, Grid, FormControl, InputLabel, Select, MenuItem, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { ResponsiveContainer, TreeMap, Tooltip, Sankey, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend } from 'recharts';
+import { ResponsiveContainer, Treemap, Tooltip, Sankey, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend } from 'recharts';
 
 interface PlanVisualizationProps {
   planId: string;
@@ -143,6 +143,58 @@ const PlanVisualization: React.FC<PlanVisualizationProps> = ({
     }
   };
   
+  // Custom content for Treemap
+  const CustomizedContent = (props: any) => {
+    const { x, y, width, height, name, payload } = props;
+    const data = payload as any;
+    
+    return (
+      <g>
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          style={{
+            fill: getStatusColor(data.status),
+            stroke: theme.palette.background.paper,
+            strokeWidth: 2,
+            strokeOpacity: 1,
+          }}
+        />
+        {width > 50 && height > 30 && (
+          <text
+            x={x + width / 2}
+            y={y + height / 2}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{
+              fill: theme.palette.getContrastText(getStatusColor(data.status)),
+              fontSize: 14,
+              fontWeight: 'bold',
+            }}
+          >
+            {name}
+          </text>
+        )}
+        {width > 50 && height > 50 && (
+          <text
+            x={x + width / 2}
+            y={y + height / 2 + 15}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            style={{
+              fill: theme.palette.getContrastText(getStatusColor(data.status)),
+              fontSize: 12,
+            }}
+          >
+            {data.completion}%
+          </text>
+        )}
+      </g>
+    );
+  };
+  
   // Render appropriate visualization based on type
   const renderVisualization = () => {
     if (!planData) {
@@ -157,63 +209,16 @@ const PlanVisualization: React.FC<PlanVisualizationProps> = ({
       case 'treemap':
         return (
           <ResponsiveContainer width="100%" height="100%">
-            <TreeMap
+            <Treemap
               data={planData.treemap}
               dataKey="size"
               aspectRatio={4 / 3}
               stroke={theme.palette.background.paper}
               fill={theme.palette.primary.main}
-              content={({ root, depth, x, y, width, height, index, payload, colors, rank, name }) => {
-                const data = payload as any;
-                return (
-                  <g>
-                    <rect
-                      x={x}
-                      y={y}
-                      width={width}
-                      height={height}
-                      style={{
-                        fill: getStatusColor(data.status),
-                        stroke: theme.palette.background.paper,
-                        strokeWidth: 2 / (depth + 1e-10),
-                        strokeOpacity: 1 / (depth + 1e-10),
-                      }}
-                    />
-                    {width > 50 && height > 30 && (
-                      <text
-                        x={x + width / 2}
-                        y={y + height / 2}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        style={{
-                          fill: theme.palette.getContrastText(getStatusColor(data.status)),
-                          fontSize: 14,
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {name}
-                      </text>
-                    )}
-                    {width > 50 && height > 50 && (
-                      <text
-                        x={x + width / 2}
-                        y={y + height / 2 + 15}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        style={{
-                          fill: theme.palette.getContrastText(getStatusColor(data.status)),
-                          fontSize: 12,
-                        }}
-                      >
-                        {data.completion}%
-                      </text>
-                    )}
-                  </g>
-                );
-              }}
+              content={<CustomizedContent />}
             >
               <Tooltip content={<TreeMapTooltip />} />
-            </TreeMap>
+            </Treemap>
           </ResponsiveContainer>
         );
         

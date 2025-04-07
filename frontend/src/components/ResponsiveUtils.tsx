@@ -51,18 +51,37 @@ const ResponsiveTouchTargets: React.FC<ResponsiveTouchTargetsProps> = ({
     const childType = child.type as any;
     const elementName = childType?.displayName || childType?.name || '';
     
+    // Type-safe approach to check element type and apply styles
     if (elementName.includes('Button')) {
+      const childProps = child.props as any;
+      const childStyle = childProps.style || {};
       return React.cloneElement(child, {
-        style: { ...touchStyles.button, ...child.props.style },
-      });
+        style: {
+          ...touchStyles.button,
+          ...childStyle
+        }
+      } as any);
     } else if (elementName.includes('Input') || elementName.includes('TextField')) {
+      const childProps = child.props as any;
+      const childStyle = childProps.style || {};
       return React.cloneElement(child, {
-        style: { ...touchStyles.input, ...child.props.style },
-      });
-    } else if (child.props.onClick) {
-      return React.cloneElement(child, {
-        style: { ...touchStyles.clickable, ...child.props.style },
-      });
+        style: {
+          ...touchStyles.input,
+          ...childStyle
+        }
+      } as any);
+    } else {
+      // Check for onClick property in a type-safe way
+      const childProps = child.props as any;
+      if (childProps && typeof childProps.onClick === 'function') {
+        const childStyle = childProps.style || {};
+        return React.cloneElement(child, {
+          style: {
+            ...touchStyles.clickable,
+            ...childStyle
+          }
+        } as any);
+      }
     }
     
     return child;
@@ -123,7 +142,6 @@ const ResponsiveTypography: React.FC<ResponsiveTypographyProps> = ({
   return (
     <Typography 
       variant={responsiveVariant} 
-      component={component || responsiveVariant} 
       {...props}
     >
       {children}
@@ -162,8 +180,8 @@ const ResponsiveSpacing: React.FC<ResponsiveSpacingProps> = ({
   const isLargeDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isExtraLargeDesktop = useMediaQuery(theme.breakpoints.up('xl'));
   
-  // Determine the appropriate spacing
-  let currentSpacing = spacing.xs;
+  // Determine the appropriate spacing with a default fallback
+  let currentSpacing = spacing.xs || 2;
   if (isExtraLargeDesktop && spacing.xl !== undefined) currentSpacing = spacing.xl;
   else if (isLargeDesktop && spacing.lg !== undefined) currentSpacing = spacing.lg;
   else if (isDesktop && spacing.md !== undefined) currentSpacing = spacing.md;

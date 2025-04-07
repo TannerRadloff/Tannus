@@ -1,5 +1,5 @@
 import agentsSDK from './agentsSDK';
-import { OpenAIAgent } from 'openai-agents';
+import { OpenAIAgent } from './agentsSDK';
 
 /**
  * Test function to verify the OpenAI Agents SDK integration
@@ -29,7 +29,7 @@ export const testAgentSDKIntegration = async () => {
     console.error('Error testing OpenAI Agents SDK integration:', error);
     return {
       success: false,
-      message: 'OpenAI Agents SDK integration verification failed',
+      message: `OpenAI Agents SDK integration verification failed: ${error instanceof Error ? error.message : String(error)}`,
       error: error instanceof Error ? error.message : String(error)
     };
   }

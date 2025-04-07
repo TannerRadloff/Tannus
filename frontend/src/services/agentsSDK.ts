@@ -1,28 +1,17 @@
-// Import OpenAI directly instead of using the openai-agents package
+import { OpenAIAgent as OriginalOpenAIAgent, AgentOptions, CompletionResult, CreateChatCompletionOptions } from 'openai-agents';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
-
-// Create a browser-compatible implementation that doesn't rely on Node.js modules
 
 // Initialize OpenAI API key from environment variable
 const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || '';
 
-// Define types to match the original implementation
-export interface AgentOptions {
-  model: string;
-  system_instruction: string;
-  temperature: number;
-  top_p: number;
-}
-
-export interface CompletionResult {
-  choices: string[];
-}
-
-// Mock OpenAIAgent class for browser compatibility
+/**
+ * Browser-compatible wrapper for OpenAI Agents SDK
+ * This implementation provides a compatible interface while working in browser environments
+ */
 export class OpenAIAgent {
-  private options: AgentOptions;
   private openai: OpenAI;
+  private options: AgentOptions;
   private chatHistory: Record<string, ChatCompletionMessageParam[]> = {};
 
   constructor(options: AgentOptions, config: { apiKey: string }) {
@@ -33,24 +22,44 @@ export class OpenAIAgent {
     });
   }
 
-  async createChatCompletion(input: string): Promise<CompletionResult> {
+  async createChatCompletion(input: string, completionOptions?: CreateChatCompletionOptions): Promise<CompletionResult> {
     try {
+      console.log('Creating chat completion with input:', input);
+      console.log('Using API key:', this.openai.apiKey ? 'API key is set' : 'API key is not set');
+      
       const response = await this.openai.chat.completions.create({
-        model: this.options.model,
+        model: this.options.model as string,
         messages: [
-          { role: 'system', content: this.options.system_instruction },
+          { role: 'system', content: this.options.system_instruction as string },
           { role: 'user', content: input }
         ],
-        temperature: this.options.temperature,
-        top_p: this.options.top_p
+        temperature: this.options.temperature || 0.7,
+        top_p: this.options.top_p || 0.9
       });
 
-      return {
-        choices: [response.choices[0]?.message.content || "No response generated"]
+      const content = response.choices[0]?.message.content || "No response generated";
+      console.log('Received response:', content);
+      
+      return { 
+        choices: [content],
+        total_usage: { 
+          completion_tokens: response.usage?.completion_tokens || 0, 
+          prompt_tokens: response.usage?.prompt_tokens || 0, 
+          total_tokens: response.usage?.total_tokens || 0 
+        },
+        completion_messages: [
+          { role: 'assistant', content }
+        ],
+        completions: []
       };
     } catch (error) {
       console.error('Error creating chat completion:', error);
-      return { choices: ["Error: Unable to generate response"] };
+      return { 
+        choices: ["Error: Unable to generate response"],
+        total_usage: { completion_tokens: 0, prompt_tokens: 0, total_tokens: 0 },
+        completion_messages: [],
+        completions: []
+      };
     }
   }
 
@@ -96,7 +105,9 @@ export const createAgent = (instructions: string, tools: any[] = []): OpenAIAgen
  */
 export const runAgent = async (agent: OpenAIAgent, input: string): Promise<string> => {
   try {
+    console.log('Running agent with input:', input);
     const result: CompletionResult = await agent.createChatCompletion(input);
+    console.log('Agent run result:', result.choices[0]);
     return result.choices[0] || "No response generated";
   } catch (error) {
     console.error('Error running agent:', error);
@@ -105,7 +116,7 @@ export const runAgent = async (agent: OpenAIAgent, input: string): Promise<strin
 };
 
 /**
- * Stream agent responses (simulated since the SDK doesn't directly support streaming)
+ * Stream agent responses
  * 
  * @param agent - The agent to run
  * @param input - The input to provide to the agent
@@ -113,21 +124,9 @@ export const runAgent = async (agent: OpenAIAgent, input: string): Promise<strin
  */
 export const streamAgent = async (agent: OpenAIAgent, input: string, onUpdate: (content: string) => void): Promise<string> => {
   try {
-    // Since the SDK doesn't directly support streaming in the same way as our mock,
-    // we'll simulate it by breaking up the response
     const result: CompletionResult = await agent.createChatCompletion(input);
     const response = result.choices[0] || "No response generated";
-    
-    // Simulate streaming by breaking the response into chunks
-    const chunks = response.split(' ');
-    let currentText = '';
-    
-    for (const chunk of chunks) {
-      await new Promise(resolve => setTimeout(resolve, 50)); // Small delay to simulate streaming
-      currentText += chunk + ' ';
-      onUpdate(currentText);
-    }
-    
+    onUpdate(response);
     return response;
   } catch (error) {
     console.error('Error streaming agent:', error);
@@ -167,10 +166,13 @@ export const deleteChatHistory = async (agent: OpenAIAgent, userId: string): Pro
   }
 };
 
-export default {
+// Create a named export object for better compatibility
+const agentsSDK = {
   createAgent,
   runAgent,
   streamAgent,
   getChatHistory,
   deleteChatHistory
 };
+
+export default agentsSDK;

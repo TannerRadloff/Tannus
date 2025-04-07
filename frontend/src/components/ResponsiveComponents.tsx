@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, useMediaQuery, useTheme, Container, Grid, Paper } from '@mui/material';
+import { Box, useMediaQuery, useTheme, Container, Paper } from '@mui/material';
+import Grid from './Grid';
 
 interface ResponsiveContainerProps {
   children: React.ReactNode;

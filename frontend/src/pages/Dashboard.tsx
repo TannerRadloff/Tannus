@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   Container, 
   Typography, 
-  Grid, 
   Card, 
   CardContent, 
   CardActions, 
@@ -28,6 +27,7 @@ import TaskProgressBar from '../components/TaskProgressBar';
 import { formatDate } from '../utils/dateUtils';
 import { Task } from '../types/Task';
 import api from '../services/api';
+import Grid from '../components/Grid';
 
 const Dashboard: React.FC = () => {
   const [activeTasks, setActiveTasks] = useState<Task[]>([]);

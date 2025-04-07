@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography, Paper, CircularProgress } from '@mui/material';
 import agentTest from '../services/agentTest';
-import { OpenAIAgent } from 'openai-agents';
+import { OpenAIAgent } from '../services/agentsSDK'; // Import from our custom implementation instead
 
 /**
  * Component to test the OpenAI Agents SDK integration

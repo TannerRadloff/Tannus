@@ -15,8 +15,7 @@ import {
   ListItemIcon,
   Alert,
   Card,
-  CardContent,
-  Grid
+  CardContent
 } from '@mui/material';
 import { 
   DarkMode as DarkModeIcon,
@@ -27,6 +26,7 @@ import {
   Language as LanguageIcon
 } from '@mui/icons-material';
 import { useTheme } from '../contexts/ThemeContext';
+import Grid from '../components/Grid';
 
 const Settings: React.FC = () => {
   const { mode, toggleColorMode } = useTheme();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, useMediaQuery, useTheme as useMuiTheme } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Divider, useMediaQuery, useTheme as useMuiTheme } from '@mui/material';
 import { Menu as MenuIcon, Dashboard as DashboardIcon, Add as AddIcon, Settings as SettingsIcon, Brightness4 as DarkModeIcon, Brightness7 as LightModeIcon } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
@@ -35,8 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Divider />
       <List>
         {menuItems.map((item) => (
-          <ListItem 
-            button 
+          <ListItemButton
             key={item.text} 
             component={Link} 
             to={item.path}
@@ -64,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 color: location.pathname === item.path ? 'primary.main' : 'inherit'
               }} 
             />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>
