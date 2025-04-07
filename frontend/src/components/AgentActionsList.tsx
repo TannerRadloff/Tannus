@@ -1,150 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, Paper, List, ListItem, ListItemText, Divider } from '@mui/material';
-import { useSocket } from '../contexts/SocketContext';
+import React from 'react';
+import { List, ListItem, ListItemText, Typography, Box, Divider } from '@mui/material';
+
+interface AgentAction {
+  id: string;
+  type: string;
+  content: string;
+  timestamp: string;
+}
 
 interface AgentActionsListProps {
   sessionId: string;
-  maxItems?: number;
 }
 
-const AgentActionsList: React.FC<AgentActionsListProps> = ({ 
-  sessionId,
-  maxItems = 10
-}) => {
-  const [actions, setActions] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { socket, connected } = useSocket();
-  
-  // Load initial data and set up socket listeners
-  useEffect(() => {
-    // Fetch initial actions
-    const fetchActions = async () => {
-      try {
-        // In a real app, this would fetch from an API
-        // For now, we'll simulate loading
-        setTimeout(() => {
-          setActions([
-            { 
-              id: '1', 
-              timestamp: new Date().toISOString(),
-              type: 'plan_creation',
-              description: 'Created initial plan'
-            },
-            { 
-              id: '2', 
-              timestamp: new Date(Date.now() - 60000).toISOString(),
-              type: 'step_completion',
-              description: 'Completed step 1: Analyze requirements'
-            }
-          ]);
-          setLoading(false);
-        }, 1000);
-      } catch (error) {
-        console.error('Error fetching agent actions:', error);
-        setLoading(false);
+const AgentActionsList: React.FC<AgentActionsListProps> = ({ sessionId }) => {
+  // This is a stub implementation
+  // In a real implementation, we would fetch actions from an API
+  const [actions, setActions] = React.useState<AgentAction[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    // Simulate loading actions
+    setLoading(true);
+    
+    // Mock data
+    const mockActions: AgentAction[] = [
+      {
+        id: '1',
+        type: 'thought',
+        content: 'I need to analyze the data provided by the user.',
+        timestamp: new Date().toISOString()
+      },
+      {
+        id: '2',
+        type: 'action',
+        content: 'Searching for relevant information...',
+        timestamp: new Date().toISOString()
+      },
+      {
+        id: '3',
+        type: 'result',
+        content: 'Found 3 relevant articles that match the query.',
+        timestamp: new Date().toISOString()
       }
-    };
+    ];
     
-    fetchActions();
-    
-    // Set up socket listener for real-time updates
-    if (socket && sessionId) {
-      console.log(`Subscribing to agent actions for session ${sessionId}`);
-      
-      // Listen for agent actions
-      const handleAgentAction = (data: any) => {
-        setActions(prev => {
-          // Add new action to the beginning of the list
-          const updated = [data, ...prev];
-          // Limit the number of items
-          return updated.slice(0, maxItems);
-        });
-      };
-      
-      socket.on(`agent_action_${sessionId}`, handleAgentAction);
-      
-      // Cleanup
-      return () => {
-        socket.off(`agent_action_${sessionId}`);
-      };
-    }
-  }, [socket, sessionId, maxItems]);
-  
-  // Format timestamp
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString();
-  };
-  
+    // Simulate API delay
+    setTimeout(() => {
+      setActions(mockActions);
+      setLoading(false);
+    }, 500);
+  }, [sessionId]);
+
   if (loading) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        p: 3
-      }}>
-        <CircularProgress size={24} sx={{ mr: 1 }} />
-        <Typography variant="body2">Loading agent actions...</Typography>
-      </Box>
+      <Typography variant="body2" color="text.secondary">
+        Loading agent actions...
+      </Typography>
     );
   }
-  
+
   if (actions.length === 0) {
     return (
-      <Box sx={{ 
-        p: 3,
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        flexDirection: 'column'
-      }}>
-        <Typography variant="body1" color="textSecondary" align="center">
-          No agent actions recorded yet
-        </Typography>
-        {!connected && (
-          <Typography variant="body2" color="error" align="center" sx={{ mt: 1 }}>
-            Real-time updates disconnected
-          </Typography>
-        )}
-      </Box>
+      <Typography variant="body1" color="text.secondary">
+        No agent actions recorded for this session.
+      </Typography>
     );
   }
-  
+
   return (
-    <Box>
-      <List sx={{ width: '100%' }}>
-        {actions.map((action, index) => (
-          <React.Fragment key={action.id || index}>
-            <ListItem alignItems="flex-start">
-              <ListItemText
-                primary={action.description}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      color="text.primary"
-                      sx={{ display: 'inline', mr: 1 }}
-                    >
-                      {action.type}
-                    </Typography>
-                    {formatTimestamp(action.timestamp)}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            {index < actions.length - 1 && <Divider component="li" />}
-          </React.Fragment>
-        ))}
-      </List>
-      
-      {!connected && (
-        <Typography variant="caption" color="error" align="center" sx={{ display: 'block', mt: 1, mb: 1 }}>
-          Real-time updates disconnected
-        </Typography>
-      )}
-    </Box>
+    <List sx={{ width: '100%' }}>
+      {actions.map((action, index) => (
+        <React.Fragment key={action.id}>
+          {index > 0 && <Divider component="li" />}
+          <ListItem alignItems="flex-start">
+            <ListItemText
+              primary={
+                <Typography
+                  variant="body2"
+                  component="span"
+                  sx={{ 
+                    fontWeight: 500,
+                    textTransform: 'capitalize',
+                    color: action.type === 'thought' ? 'primary.main' : 
+                           action.type === 'action' ? 'secondary.main' : 'success.main'
+                  }}
+                >
+                  {action.type}
+                </Typography>
+              }
+              secondary={
+                <Box sx={{ mt: 1 }}>
+                  <Typography variant="body1" component="span">
+                    {action.content}
+                  </Typography>
+                  <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
+                    {new Date(action.timestamp).toLocaleTimeString()}
+                  </Typography>
+                </Box>
+              }
+            />
+          </ListItem>
+        </React.Fragment>
+      ))}
+    </List>
   );
 };
 
