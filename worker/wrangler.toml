@@ -1,54 +1,24 @@
-name = "ai-agents-webapp-worker"
-type = "javascript"
-account_id = ""
-workers_dev = true
-route = ""
+name = "airountable-api"
+main = "src/index.js"
 compatibility_date = "2023-12-01"
 
-[build]
-command = "npm run build:worker"
-watch_dir = "src"
-
-[build.upload]
-format = "service-worker"
-
-[env.production]
-vars = { ENVIRONMENT = "production" }
-
-[env.staging]
-vars = { ENVIRONMENT = "staging" }
-
-[env.development]
-vars = { ENVIRONMENT = "development" }
-
-[[kv_namespaces]]
-binding = "PLANS_STORAGE"
-id = ""
-preview_id = ""
-
-[[kv_namespaces]]
-binding = "AGENT_STORAGE"
-id = ""
-preview_id = ""
+[vars]
+ENVIRONMENT = "production"
+API_PATH = "api"
+FRONTEND_DOMAIN = "airountable.com"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "ai_agents_db"
-database_id = ""
-preview_database_id = ""
+database_id = "6a8a09a7-3413-4b94-9e5c-b763cea716ad"
 
-[durable_objects]
-bindings = [
-  { name = "AGENT_SESSIONS", class_name = "AgentSession" }
-]
+[[kv_namespaces]]
+binding = "PLANS_STORAGE"
+id = "c2102778443846c99afdb7a27b0c0126"
 
-[[migrations]]
-tag = "v1"
-new_classes = ["AgentSession"]
-
-[site]
-bucket = "../frontend/build"
-entry-point = "."
+[[kv_namespaces]]
+binding = "AGENT_STORAGE"
+id = "a1a9a350fe6e472d9ad4b823364453e1"
 
 [triggers]
 crons = ["*/5 * * * *"]
