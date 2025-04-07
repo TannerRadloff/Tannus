@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { OpenAIAgent } from 'openai-agents';
+import { OpenAIAgent } from './agentsSDK';
 import * as agentsSDK from './agentsSDK';
 
 // Create an axios instance with default configuration

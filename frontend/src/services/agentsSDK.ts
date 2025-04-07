@@ -1,11 +1,71 @@
-import { OpenAIAgent, AgentOptions, CompletionResult, CreateChatCompletionOptions } from 'openai-agents';
+// Import OpenAI directly instead of using the openai-agents package
+import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
-// Create a real implementation of the OpenAI Agents SDK
-// This replaces the mock implementation with the actual SDK
+// Create a browser-compatible implementation that doesn't rely on Node.js modules
 
 // Initialize OpenAI API key from environment variable
 const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || '';
+
+// Define types to match the original implementation
+export interface AgentOptions {
+  model: string;
+  system_instruction: string;
+  temperature: number;
+  top_p: number;
+}
+
+export interface CompletionResult {
+  choices: string[];
+}
+
+// Mock OpenAIAgent class for browser compatibility
+export class OpenAIAgent {
+  private options: AgentOptions;
+  private openai: OpenAI;
+  private chatHistory: Record<string, ChatCompletionMessageParam[]> = {};
+
+  constructor(options: AgentOptions, config: { apiKey: string }) {
+    this.options = options;
+    this.openai = new OpenAI({
+      apiKey: config.apiKey,
+      dangerouslyAllowBrowser: true // Required for browser usage
+    });
+  }
+
+  async createChatCompletion(input: string): Promise<CompletionResult> {
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: this.options.model,
+        messages: [
+          { role: 'system', content: this.options.system_instruction },
+          { role: 'user', content: input }
+        ],
+        temperature: this.options.temperature,
+        top_p: this.options.top_p
+      });
+
+      return {
+        choices: [response.choices[0]?.message.content || "No response generated"]
+      };
+    } catch (error) {
+      console.error('Error creating chat completion:', error);
+      return { choices: ["Error: Unable to generate response"] };
+    }
+  }
+
+  async getChatHistory(userId: string): Promise<ChatCompletionMessageParam[]> {
+    return this.chatHistory[userId] || [];
+  }
+
+  async deleteChatHistory(userId: string): Promise<boolean> {
+    if (this.chatHistory[userId]) {
+      delete this.chatHistory[userId];
+      return true;
+    }
+    return false;
+  }
+}
 
 /**
  * Create an agent with the specified instructions and tools
@@ -16,7 +76,7 @@ const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY || '';
  */
 export const createAgent = (instructions: string, tools: any[] = []): OpenAIAgent => {
   const agentOptions: AgentOptions = {
-    model: "o3-mini",
+    model: "gpt-3.5-turbo", // Using a standard OpenAI model
     system_instruction: instructions,
     temperature: 0.7,
     top_p: 0.9,
